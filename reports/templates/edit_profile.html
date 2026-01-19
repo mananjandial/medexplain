@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Profile</title>
+<style>
+body { background:#020617; color:white; font-family:Segoe UI; }
+.card { width:400px; margin:80px auto; background:#0b1220; padding:30px; border-radius:12px; }
+input { width:100%; padding:10px; margin-bottom:15px; border-radius:8px; border:none; background:#020617; color:white; }
+button { width:100%; padding:12px; background:#2563eb; border:none; border-radius:8px; color:white; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Edit Profile</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <input name="age" placeholder="Age" value="{{ profile.age }}">
+  <input name="sex" placeholder="Sex" value="{{ profile.sex }}">
+  <input name="weight" placeholder="Weight (kg)" value="{{ profile.weight }}">
+  <input name="height" placeholder="Height (cm)" value="{{ profile.height }}">
+  <button>Save</button>
+</form>
+
+</div>
+
+</body>
+</html>

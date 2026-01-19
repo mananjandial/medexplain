@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MedExplain | Dashboard</title>
+<style>
+* { box-sizing: border-box; font-family: Segoe UI; }
+
+.profile-box input, .profile-box select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #020617;
+  color: white;
+}
+
+
+body {
+  margin: 0;
+  background: #020617;
+  color: white;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;   /* VERY IMPORTANT */
+}
+
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: #0b1220;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 30px;
+}
+
+.reports {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.report-item {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  background: #020617;
+}
+
+.report-item a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.report-item:hover { background: #1e293b; }
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px;
+  height: 100vh;
+  overflow-y: auto;   /* Main content scrolls separately */
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.profile-btn {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #0b1220;
+}
+
+.profile-box {
+  display: none;
+  position: absolute;
+  right: 30px;
+  top: 80px;
+  background: #0b1220;
+  padding: 20px;
+  border-radius: 10px;
+  width: 260px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+}
+
+.profile-box p { margin: 8px 0; }
+
+.profile-box a {
+  color: #38bdf8;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* Cards */
+.card {
+  background: #0b1220;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+h3 { margin-top: 0; color: #38bdf8; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand">MedExplain</div>
+
+  <div class="reports">
+    {% for r in reports %}
+      <div class="report-item">
+        <a href="?report={{ r.id }}">
+          {{ r.filename }}
+        </a>
+      </div>
+    {% empty %}
+      <p>No reports yet</p>
+    {% endfor %}
+  </div>
+
+  <a href="/upload/" style="color:#38bdf8;text-decoration:none;">➕ Upload New Report</a>
+
+  <form action="/logout/" method="post" style="margin-top:15px;">
+    {% csrf_token %}
+    <button style="background:none;border:none;color:#38bdf8;cursor:pointer;">Logout</button>
+  </form>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h2>Medical Report Viewer</h2>
+    <div class="profile-btn" onclick="toggleProfile()">
+      👤 {{ request.user.username }}
+    </div>
+  </div>
+
+  <div class="profile-box" id="profileBox">
+
+  <div id="viewProfile">
+    <p><b>Name:</b> {{ request.user.username }}</p>
+    <p><b>Age:</b> <span id="ageVal">{{ request.user.userprofile.age|default:"--" }}</span></p>
+    <p><b>Sex:</b> <span id="sexVal">{{ request.user.userprofile.sex|default:"--" }}</span></p>
+    <p><b>Weight:</b> <span id="weightVal">{{ request.user.userprofile.weight|default:"--" }}</span> kg</p>
+    <p><b>Height:</b> <span id="heightVal">{{ request.user.userprofile.height|default:"--" }}</span> cm</p>
+    <a href="#" onclick="enableEdit()">Edit</a>
+  </div>
+
+  <div id="editProfile" style="display:none;">
+    <input id="age" placeholder="Age" value="{{ request.user.userprofile.age }}">
+    
+    <select id="sex">
+      <option value="">Sex</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+
+    <input id="weight" placeholder="Weight (kg)" value="{{ request.user.userprofile.weight }}">
+    <input id="height" placeholder="Height (cm)" value="{{ request.user.userprofile.height }}">
+
+    <button onclick="saveProfile()">Save</button>
+  </div>
+
+  </div>
+
+
+  {% if selected_report %}
+    <div class="card">
+      <h3>Summary</h3>
+      <p>{{ selected_report.ai_summary }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Abnormal Findings</h3>
+      <p>{{ selected_report.abnormal_findings }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Lifestyle Suggestions</h3>
+      <p>{{ selected_report.suggestions }}</p>
+    </div>
+  {% else %}
+    <p>Select a report from the left to view details.</p>
+  {% endif %}
+
+</div>
+
+<script>
+function toggleProfile() {
+  const box = document.getElementById("profileBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function enableEdit() {
+  document.getElementById("viewProfile").style.display = "none";
+  document.getElementById("editProfile").style.display = "block";
+}
+
+function saveProfile() {
+  const data = new FormData();
+  data.append("age", document.getElementById("age").value);
+  data.append("sex", document.getElementById("sex").value);
+  data.append("weight", document.getElementById("weight").value);
+  data.append("height", document.getElementById("height").value);
+
+  fetch("/profile/update/", {
+    method: "POST",
+    body: data,
+    headers: {
+      "X-CSRFToken": "{{ csrf_token }}"
+    }
+  }).then(() => location.reload());
+}
+</script>
+
+
+</body>
+</html>

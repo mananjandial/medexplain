@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MedExplain | Upload</title>
+<style>
+body {
+  margin:0;
+  height:100vh;
+  background:linear-gradient(120deg,#0f172a,#020617);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Segoe UI;
+}
+
+.card {
+  width:500px;
+  background:#0b1220;
+  border-radius:14px;
+  padding:40px;
+  color:white;
+  box-shadow:0 25px 80px rgba(0,0,0,.5);
+}
+
+h2 { text-align:center; }
+
+input[type=file] {
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  background:#020617;
+  color:white;
+  margin:20px 0;
+}
+
+button {
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+a { color:#38bdf8; text-decoration:none; display:block; text-align:center; margin-top:15px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Upload Medical Report</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="report_file" required>
+    <button type="submit">Upload Report</button>
+  </form>
+
+  <a href="/dashboard/">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

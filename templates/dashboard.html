@@ -1,0 +1,13 @@
+<h2>Your Reports</h2>
+<a href="/upload/">Upload New</a>
+<a href="/logout/">Logout</a>
+
+{% for report in reports %}
+<hr>
+<p><b>Uploaded:</b> {{ report.created_at }}</p>
+<p><b>Summary:</b> {{ report.ai_summary }}</p>
+<p><b>Abnormal Findings:</b> {{ report.abnormal_findings }}</p>
+<p><b>Suggestions:</b> {{ report.suggestions }}</p>
+{% empty %}
+<p>No reports yet.</p>
+{% endfor %}

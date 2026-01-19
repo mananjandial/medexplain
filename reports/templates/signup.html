@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MedExplain | Sign Up</title>
+<style>
+body { margin:0; height:100vh; background:linear-gradient(120deg,#0f172a,#020617);
+display:flex; align-items:center; justify-content:center; }
+
+.card { width:420px; background:#0b1220; border-radius:14px; padding:40px;
+color:white; box-shadow:0 25px 80px rgba(0,0,0,.5); }
+
+.brand { font-size:26px; font-weight:700; color:#38bdf8; text-align:center; }
+.subtitle { text-align:center; opacity:.7; margin-bottom:30px; }
+
+.field { margin-bottom:15px; }
+label { font-size:14px; opacity:.8; }
+
+input {
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  margin-top:5px;
+  background:#020617;
+  color:white;
+}
+
+.errorlist { color:#fb7185; font-size:13px; margin:5px 0 0; }
+
+button {
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.footer { text-align:center; margin-top:20px; font-size:14px; }
+.footer a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="brand">MedExplain</div>
+  <div class="subtitle">Create your account</div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="field">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+
+    <button>Create Account</button>
+  </form>
+
+  <div class="footer">
+    Already have an account? <a href="/login/">Sign in</a>
+  </div>
+</div>
+
+</body>
+</html>

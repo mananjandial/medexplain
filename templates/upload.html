@@ -1,0 +1,7 @@
+<h2>Upload Medical Report</h2>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<input type="file" name="report_file" required>
+<button type="submit">Upload</button>
+</form>
+<a href="/dashboard/">Go to Dashboard</a>
