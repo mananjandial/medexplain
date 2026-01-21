@@ -118,6 +118,35 @@ body {
 
 h3 { margin-top: 0; color: #38bdf8; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+/* Markdown Styling */
+.markdown-content {
+  line-height: 1.6;
+  font-size: 15px;
+  color: #e2e8f0;
+}
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+  color: #38bdf8;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+.markdown-content ul, .markdown-content ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.markdown-content li {
+  margin-bottom: 5px;
+}
+.markdown-content strong {
+  color: #fff;
+  font-weight: 700;
+}
+.markdown-content p {
+  margin-bottom: 10px;
+}
+</style>
 </head>
 <body>
 
@@ -185,17 +214,17 @@ h3 { margin-top: 0; color: #38bdf8; }
   {% if selected_report %}
     <div class="card">
       <h3>Summary</h3>
-      <p>{{ selected_report.ai_summary }}</p>
+      <div id="summary-content" class="markdown-content"></div>
     </div>
 
     <div class="card">
       <h3>Abnormal Findings</h3>
-      <p>{{ selected_report.abnormal_findings }}</p>
+      <div id="abnormal-content" class="markdown-content"></div>
     </div>
 
     <div class="card">
       <h3>Lifestyle Suggestions</h3>
-      <p>{{ selected_report.suggestions }}</p>
+      <div id="suggestions-content" class="markdown-content"></div>
     </div>
   {% else %}
     <p>Select a report from the left to view details.</p>
@@ -229,6 +258,19 @@ function saveProfile() {
     }
   }).then(() => location.reload());
 }
+
+// Markdown Rendering
+document.addEventListener("DOMContentLoaded", function() {
+  {% if selected_report %}
+    const summary = "{{ selected_report.ai_summary|escapejs }}";
+    const abnormal = "{{ selected_report.abnormal_findings|escapejs }}";
+    const suggestions = "{{ selected_report.suggestions|escapejs }}";
+
+    document.getElementById('summary-content').innerHTML = marked.parse(summary);
+    document.getElementById('abnormal-content').innerHTML = marked.parse(abnormal);
+    document.getElementById('suggestions-content').innerHTML = marked.parse(suggestions);
+  {% endif %}
+});
 </script>
 
 
