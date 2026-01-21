@@ -2,8 +2,15 @@ services:
   - type: web
     name: medexplain
     env: python
-    buildCommand: "./build.sh && pip install -r requirements.txt"
+    plan: starter
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn config.wsgi:application"
+
+    aptPackages:
+      - tesseract-ocr
+      - libtesseract-dev
+
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
